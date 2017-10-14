@@ -66,8 +66,8 @@ function createPopUp(response)
         url: 'html/results.html',
         focused: false,
         type: 'popup',
-        height : 400,
-        width : 400
+        height : 250,
+        width : 800
     }
     chrome.windows.create(popup_options, (response) => {});
 }
