@@ -10,7 +10,10 @@
         }
     ],
     "background": {
-        "scripts": ["scripts/backgroundScripts.js"],
+        "scripts": [
+            "scripts/backgroundScripts.js",
+            "scripts/lib/hot-reload.js"
+        ],
         "persistent": false
     },
     "browser_action": {
