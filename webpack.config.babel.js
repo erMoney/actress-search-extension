@@ -40,6 +40,10 @@ module.exports = {
                     to: path.join(__dirname, 'dist'),
                 },
                 {
+                    from: path.join(__dirname, 'src', 'scripts', 'lib', 'hot-reload.js'),
+                    to: path.join(__dirname, 'dist', 'scripts', 'lib'),
+                },
+                {
                     from: path.join(__dirname, 'src', 'html', 'popup.html'),
                     to: path.join(__dirname, 'dist', 'html'),
                 },
