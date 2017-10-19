@@ -34,7 +34,7 @@ function sendMessage(msg)
 //
 // end messages
 //
-
+const WIDON_RATIO = window.devicePixelRatio
 let ghostElement,
     startPos,
     gCoords
@@ -58,14 +58,14 @@ function mouseDown(e)
 {
     e.preventDefault();
 
-    startPos = {x: e.pageX, y: e.pageY};
+    startPos = {x: e.pageX, y: e.clientY};
 
     ghostElement = document.createElement('div');
     ghostElement.style.background = 'blue';
     ghostElement.style.opacity = '0.1';
     ghostElement.style.position = 'absolute';
     ghostElement.style.left = e.pageX + 'px';
-    ghostElement.style.top = e.pageY + 'px';
+    ghostElement.style.top = e.clientY + 'px';
     ghostElement.style.width = "0px";
     ghostElement.style.height = "0px";
     ghostElement.style.zIndex = "1000000";
@@ -81,7 +81,7 @@ function mouseMove(e)
 {
     e.preventDefault();
 
-    let nowPos = {x: e.pageX, y: e.pageY};
+    let nowPos = {x: e.pageX, y: e.clientY};
     let diff = {x: nowPos.x - startPos.x, y: nowPos.y - startPos.y};
 
     ghostElement.style.width = diff.x + 'px';
@@ -94,7 +94,7 @@ function mouseUp(e)
 {
     e.preventDefault();
 
-    let nowPos = {x: e.pageX, y: e.pageY};
+    let nowPos = {x: e.pageX, y: e.clientY};
     let diff = {x: nowPos.x - startPos.x, y: nowPos.y - startPos.y};
 
     document.removeEventListener('mousemove', mouseMove, false);
@@ -104,10 +104,10 @@ function mouseUp(e)
 
     setTimeout(function() {
         let coords = {
-            w: diff.x,
-            h: diff.y,
-            x: startPos.x,
-            y: startPos.y
+            w: diff.x * WIDON_RATIO,
+            h: diff.y * WIDON_RATIO,
+            x: startPos.x * WIDON_RATIO,
+            y: startPos.y * WIDON_RATIO
         };
         gCoords = coords;
         endScreenshot(coords);

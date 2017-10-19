@@ -2,7 +2,7 @@ console.log('start backgroundScripts.js');
 import $ from 'jquery';
 
 const Config = {
-    apiEndpoint: 'https://djcob0v8ef.execute-api.ap-northeast-1.amazonaws.com/mock/faceRecognition'
+    apiEndpoint: 'https://actress-search.herokuapp.com/face:recognition'
 }
 
 let popupResults = {}
