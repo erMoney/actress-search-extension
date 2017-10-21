@@ -33,6 +33,7 @@ function cropData(str, coords, tabId, callback)
             dataType: 'json'
         })
             .done((response, textStatus, jqXHR) => {
+                console.log(response);
                 // set popupResults
                 popupResults[tabId] = response.face;
                 popupResults.id = tabId
