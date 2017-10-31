@@ -12,7 +12,8 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
 });
 
 const displayName = (name) => {
-    $('#main').append(`女優名: ${name}`);
+    let temp = `<div style="font-family: 'Noto Serif', serif;">女優名: ${name}</div>`;
+    $('#main').append(temp);
     $('#main').show('slow');
 };
 
@@ -20,9 +21,10 @@ const createAvgleLink = (name) => {
     const AVGLE_SEARCH_VIDEOS_API_URL = 'https://api.avgle.com/v1/search/';
     let query = name,
         page = 0,
-        limit = '?limit=5'
+        limit = '?limit=6'
 
     $.getJSON(AVGLE_SEARCH_VIDEOS_API_URL + encodeURIComponent(query) + '/' + page + limit, (response) => {
+        console.log(response);
         if (response.success) {
             let videos = response.response.videos;
             createLink(videos);
@@ -31,10 +33,29 @@ const createAvgleLink = (name) => {
 
     const createLink = (videos) => {
         let $videoElement = $('#video')
+        let count = 1;
+        const MAX = videos.length;
+        let temp = '';
         for(let video of videos) {
-            let temp = `・<a href="${video.video_url}" target="_blank">${video.title}</a><br>`;
-            $videoElement.append(temp);
+            if( ( count % 2 ) != 0 ) {
+                temp += '<div class="mdl-grid">';
+            }
+            temp += `
+                <div class="mdl-cell mdl-cell--6-col">
+                    <div class="cell-video">
+                        <video controls>
+                            <source src="${video.preview_video_url}" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            `;
+            if (( count % 2 ) == 0 || count == MAX) {
+                temp += '</div>';
+            }
+            count++;
+            // let temp = `・<a href="${video.video_url}" target="_blank">${video.title}</a><br>`;
         }
+        $videoElement.append(temp);
         $videoElement.show('slow');
     };
 }
