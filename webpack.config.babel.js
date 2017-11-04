@@ -50,7 +50,11 @@ module.exports = {
                 {
                     from: path.join(__dirname, 'src', 'html', 'results.html'),
                     to: path.join(__dirname, 'dist', 'html'),
-                }
+                },
+                {
+                    from: path.join(__dirname, 'src', 'html', 'assets', 'css', 'main.css'),
+                    to: path.join(__dirname, 'dist', 'html', 'assets', 'css'),
+                },
             ]
         ),
          new UglifyJSPlugin()

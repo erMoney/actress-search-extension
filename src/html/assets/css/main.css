@@ -1,0 +1,14 @@
+.actress-name {
+    display: none;
+}
+.actress-video {
+    display: none;
+    width: 900px;
+}
+.card-square.mdl-card {
+    width: 320px;
+    height: 320px;
+}
+.card-square > .mdl-card__title {
+    color: #fff;
+}
