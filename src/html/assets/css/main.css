@@ -4,6 +4,7 @@
 .actress-video {
     display: none;
     width: 900px;
+    margin: auto;
 }
 .card-square.mdl-card {
     width: 320px;
