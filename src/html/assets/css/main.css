@@ -2,15 +2,20 @@
     width: 100%;
 }
 
+.actress-card-wide > .mdl-card__supporting-text {
+    width: 100%;
+}
 .actress-card-wide > .mdl-card__title {
     color: #fff;
-    height: 176px;
-    background:blue;
+    height: 135px;
+    background:gray;
     /*background:blue url('../assets/demos/welcome_card.jpg') center / cover;*/
 }
+
 .actress-card-wide > .mdl-card__menu {
     color: #fff;
 }
+
 .actress-card-wide > .mdl-card__actions {
     padding: 0px;
 }
@@ -18,6 +23,7 @@
 .mdl-layout__content {
     width: 100%;
 }
+
 .card-square {
     width: 100%;
     margin-left: auto;
@@ -27,13 +33,16 @@
 .actress-name {
     display: none;
 }
+
 .actress-video {
     display: none;
 }
+
 .card-square.mdl-card {
     width: 320px;
     height: 320px;
 }
+
 .card-square > .mdl-card__title {
     color: #fff;
 }

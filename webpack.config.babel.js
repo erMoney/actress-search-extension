@@ -55,6 +55,18 @@ module.exports = {
                     from: path.join(__dirname, 'src', 'html', 'assets', 'css', 'main.css'),
                     to: path.join(__dirname, 'dist', 'html', 'assets', 'css'),
                 },
+                {
+                    from: path.join(__dirname, 'src', 'icons', '16.png'),
+                    to: path.join(__dirname, 'dist', 'icons', '16.png'),
+                },
+                {
+                    from: path.join(__dirname, 'src', 'icons', '48.png'),
+                    to: path.join(__dirname, 'dist', 'icons', '48.png'),
+                },
+                {
+                    from: path.join(__dirname, 'src', 'icons', '128.png'),
+                    to: path.join(__dirname, 'dist', 'icons', '128.png'),
+                },
             ]
         ),
          new UglifyJSPlugin()
