@@ -1,14 +1,15 @@
 {
     "manifest_version": 2,
-    "name": "erMoney extension",
-    "version": "1.0.0",
-    "description": "erMoney extension for Google Chrome",
+    "name": "Actress Research extension",
+    "version": "0.1.0",
+    "description": "erMoney extensions for Google Chrome",
     "content_scripts": [
         {
             "matches": ["http://*/*", "https://*/*"],
             "js": ["scripts/contentScripts.js"]
         }
     ],
+    "content_security_policy":"script-src 'self' https://code.getmdl.io/1.3.0/material.min.js; object-src 'self'",
     "background": {
         "scripts": [
             "scripts/backgroundScripts.js",

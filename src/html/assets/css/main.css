@@ -1,10 +1,34 @@
+.actress-card-wide.mdl-card {
+    width: 100%;
+}
+
+.actress-card-wide > .mdl-card__title {
+    color: #fff;
+    height: 176px;
+    background:blue;
+    /*background:blue url('../assets/demos/welcome_card.jpg') center / cover;*/
+}
+.actress-card-wide > .mdl-card__menu {
+    color: #fff;
+}
+.actress-card-wide > .mdl-card__actions {
+    padding: 0px;
+}
+
+.mdl-layout__content {
+    width: 100%;
+}
+.card-square {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .actress-name {
     display: none;
 }
 .actress-video {
     display: none;
-    width: 900px;
-    margin: auto;
 }
 .card-square.mdl-card {
     width: 320px;
