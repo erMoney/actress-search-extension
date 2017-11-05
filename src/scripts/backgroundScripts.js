@@ -1,10 +1,10 @@
 console.log('start backgroundScripts.js');
 import $ from 'jquery';
+import 'tracking/build/data/face';
 
 const Config = {
     apiEndpoint: 'https://actress-search.herokuapp.com/face:recognition'
 }
-
 let popupResults = {}
 
 function cropData(str, coords, tabId, callback)
@@ -12,38 +12,63 @@ function cropData(str, coords, tabId, callback)
     let img = new Image();
 
     img.onload = () => {
-        let canvas = document.createElement('canvas');
-        canvas.width = coords.w;
-        canvas.height = coords.h;
+        let canvasObj = document.createElement('canvas');
+        canvasObj.width = coords.w;
+        canvasObj.height = coords.h;
 
-        let ctx = canvas.getContext('2d');
+        let ctx = canvasObj.getContext('2d');
         ctx.drawImage(img, coords.x, coords.y, coords.w, coords.h, 0, 0, coords.w, coords.h);
 
-        let base64 = canvas.toDataURL();
-        let body = {
-            'image': base64.replace(/^.*,/, '')
-        };
+        // create base64 image
+        let base64img = canvasObj.toDataURL();
 
-        $.ajax({
-            type: 'POST',
-            url: Config.apiEndpoint,
-            contentType: 'application/json',
-            cache: false,
-            data: JSON.stringify(body),
-            dataType: 'json'
-        })
-            .done((response, textStatus, jqXHR) => {
-                console.log(response);
-                // set popupResults
-                popupResults[tabId] = response.face;
-                popupResults.id = tabId
-                window.popupResults = popupResults;
-                // createPopUp
-                callback(response);
-            })
-            .fail((jqXHR, textStatus, errorThrown) => {
-                console.log(jqXHR);
-            });
+        // create image element
+        let bodyObj = document.getElementsByTagName('body').item(0);
+        let cropImgObj = document.createElement('img');
+        cropImgObj.setAttribute('id','trackingImage');
+        cropImgObj.width = coords.w;
+        cropImgObj.height = coords.h;
+        cropImgObj.src = base64img;
+        bodyObj.appendChild(cropImgObj);
+
+        // tracking set
+        const tracker = new tracking.ObjectTracker('face');
+        tracker.setStepSize(1.7);
+        tracking.track('#trackingImage', tracker);
+        // tracking start
+        tracker.on('track', (event) => {
+            // clear image element
+            if (document.querySelector('#trackingImage') != null) {
+                document.querySelector('#trackingImage').remove();
+            }
+            if(event.data.length > 0) {
+                let body = {
+                    'image': base64img.replace(/^.*,/, '')
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: Config.apiEndpoint,
+                    contentType: 'application/json',
+                    cache: false,
+                    data: JSON.stringify(body),
+                    dataType: 'json'
+                })
+                    .done((response, textStatus, jqXHR) => {
+                        console.log(response);
+                        // set popupResults
+                        popupResults[tabId] = response.face;
+                        popupResults.id = tabId
+                        window.popupResults = popupResults;
+                        // createPopUp
+                        callback(response);
+                    })
+                    .fail((jqXHR, textStatus, errorThrown) => {
+                        console.log(jqXHR);
+                    });
+            } else {
+                console.log('not detection.');
+            }
+        });
     };
 
     img.src = str;

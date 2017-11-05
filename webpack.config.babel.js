@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
@@ -33,6 +34,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new UglifyJSPlugin(),
         new CopyWebpackPlugin(
             [
                 {
@@ -69,6 +71,8 @@ module.exports = {
                 },
             ]
         ),
-         new UglifyJSPlugin()
+        new webpack.ProvidePlugin({
+            tracking: 'tracking',
+        }),
     ]
 };
