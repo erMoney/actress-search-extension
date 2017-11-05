@@ -76,7 +76,7 @@ function createPopUp(response)
 function gotMessage(request, sender, sendResponse)
 {
     console.log('gotMessage');
-    if (request.type == "coords") {
+    if (request.type == 'coords') {
         capture(request.coords, sender.tab.id);
     }
     sendResponse({});

@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(request, sender, sendResponse)
 {
     console.log('gotMessage');
-    if (request.type == "start-screenshots") {
+    if (request.type == 'start-screenshots') {
         startScreenshot();
     }
     sendResponse({});
@@ -61,14 +61,14 @@ function mouseDown(e)
     startPos = {x: e.pageX, y: e.clientY};
 
     ghostElement = document.createElement('div');
-    ghostElement.style.background = 'blue';
+    ghostElement.style.backgroundColor = '#ff4081';
     ghostElement.style.opacity = '0.1';
     ghostElement.style.position = 'absolute';
     ghostElement.style.left = e.pageX + 'px';
     ghostElement.style.top = e.clientY + 'px';
-    ghostElement.style.width = "0px";
-    ghostElement.style.height = "0px";
-    ghostElement.style.zIndex = "1000000";
+    ghostElement.style.width = '0px';
+    ghostElement.style.height = '0px';
+    ghostElement.style.zIndex = '1000000';
     document.body.appendChild(ghostElement);
 
     document.addEventListener('mousemove', mouseMove, false);
@@ -102,7 +102,7 @@ function mouseUp(e)
 
     ghostElement.parentNode.removeChild(ghostElement);
 
-    setTimeout(function() {
+    setTimeout(() => {
         let coords = {
             w: diff.x * WIDON_RATIO,
             h: diff.y * WIDON_RATIO,
