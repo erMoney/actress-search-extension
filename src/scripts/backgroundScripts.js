@@ -28,7 +28,8 @@ function cropData(str, coords, tabId, callback)
         cropImgObj.height = coords.h;
         cropImgObj.src = base64img;
         bodyObj.appendChild(cropImgObj);
-        const cropImgObjOnload = () => {
+
+        const cropImgOnload = () => {
             return new Promise((resolve) => {
                 cropImgObj.onload = () => {
                     resolve();
@@ -36,8 +37,8 @@ function cropData(str, coords, tabId, callback)
             });
         }
 
-        cropImgObjOnload()
-            .then(() => {
+        const trackingImage = () => {
+            return new Promise((resolve, reject) => {
                 // detect init
                 const tracker = new tracking.ObjectTracker('face');
                 tracker.setInitialScale(4);
@@ -51,34 +52,52 @@ function cropData(str, coords, tabId, callback)
                     if (document.querySelector('#trackingImage') != null) {
                         document.querySelector('#trackingImage').remove();
                     }
-                    if(event.data.length > 0) {
-                        let body = {
-                            'image': base64img.replace(/^.*,/, '')
-                        };
-                        $.ajax({
-                            type: 'POST',
-                            url: apiEndpoint,
-                            contentType: 'application/json',
-                            cache: false,
-                            data: JSON.stringify(body),
-                            dataType: 'json'
-                        })
-                            .done((response, textStatus, jqXHR) => {
-                                console.log(response);
-                                // set popupResults
-                                popupResults[tabId] = response.face;
-                                popupResults.id = tabId
-                                window.popupResults = popupResults;
-                                // createPopUp
-                                callback(response);
-                            })
-                            .fail((jqXHR, textStatus, errorThrown) => {
-                                console.log(jqXHR);
-                            });
-                    } else {
-                        console.log('not detection.');
+                    if(event.data.length == 0) {
+                        reject('not detection.');
+                        return;
                     }
+                    resolve();
                 });
+            });
+        }
+
+        const faceRecognition = () => {
+            return new Promise((resolve, reject) => {
+                let body = {
+                    'image': base64img.replace(/^.*,/, '')
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: apiEndpoint,
+                    contentType: 'application/json',
+                    cache: false,
+                    data: JSON.stringify(body),
+                    dataType: 'json'
+                })
+                    .done((response, textStatus, jqXHR) => {
+                        console.log(response);
+                        resolve(response);
+                    })
+                    .fail((jqXHR, textStatus, errorThrown) => {
+                        console.log(jqXHR);
+                        reject('not found.');
+                    });
+            });
+        }
+
+        cropImgOnload()
+            .then(trackingImage)
+            .then(faceRecognition)
+            .then((res) => {
+                // set popupResults
+                popupResults[tabId] = res.face;
+                popupResults.id = tabId
+                window.popupResults = popupResults;
+                // createPopUp
+                callback(res);
+            })
+            .catch((err) => {
+                console.log(err);
             })
     };
 
