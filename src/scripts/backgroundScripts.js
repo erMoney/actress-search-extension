@@ -2,10 +2,8 @@ console.log('start backgroundScripts.js');
 import $ from 'jquery';
 import 'tracking/build/data/face';
 
-const Config = {
-    apiEndpoint: 'https://actress-search.herokuapp.com/face:recognition'
-}
 let popupResults = {}
+const apiEndpoint = 'https://actress-search.herokuapp.com/face:recognition';
 
 function cropData(str, coords, tabId, callback)
 {
@@ -30,53 +28,64 @@ function cropData(str, coords, tabId, callback)
         cropImgObj.height = coords.h;
         cropImgObj.src = base64img;
         bodyObj.appendChild(cropImgObj);
+        const cropImgObjOnload = () => {
+            return new Promise((resolve) => {
+                cropImgObj.onload = () => {
+                    resolve();
+                }
+            });
+        }
 
-        // tracking set
-        const tracker = new tracking.ObjectTracker('face');
-        tracker.setStepSize(1.7);
-        tracking.track('#trackingImage', tracker);
-        // tracking start
-        tracker.on('track', (event) => {
-            // clear image element
-            if (document.querySelector('#trackingImage') != null) {
-                document.querySelector('#trackingImage').remove();
-            }
-            if(event.data.length > 0) {
-                let body = {
-                    'image': base64img.replace(/^.*,/, '')
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: Config.apiEndpoint,
-                    contentType: 'application/json',
-                    cache: false,
-                    data: JSON.stringify(body),
-                    dataType: 'json'
-                })
-                    .done((response, textStatus, jqXHR) => {
-                        console.log(response);
-                        // set popupResults
-                        popupResults[tabId] = response.face;
-                        popupResults.id = tabId
-                        window.popupResults = popupResults;
-                        // createPopUp
-                        callback(response);
-                    })
-                    .fail((jqXHR, textStatus, errorThrown) => {
-                        console.log(jqXHR);
-                    });
-            } else {
-                console.log('not detection.');
-            }
-        });
+        cropImgObjOnload()
+            .then(() => {
+                // detect init
+                const tracker = new tracking.ObjectTracker('face');
+                tracker.setInitialScale(4);
+                tracker.setStepSize(2);
+                tracker.setEdgesDensity(0.1);
+                tracking.track('#trackingImage', tracker);
+                // detect start
+                tracker.on('track', (event) => {
+                    console.log(event);
+                    // clear image element
+                    if (document.querySelector('#trackingImage') != null) {
+                        document.querySelector('#trackingImage').remove();
+                    }
+                    if(event.data.length > 0) {
+                        let body = {
+                            'image': base64img.replace(/^.*,/, '')
+                        };
+                        $.ajax({
+                            type: 'POST',
+                            url: apiEndpoint,
+                            contentType: 'application/json',
+                            cache: false,
+                            data: JSON.stringify(body),
+                            dataType: 'json'
+                        })
+                            .done((response, textStatus, jqXHR) => {
+                                console.log(response);
+                                // set popupResults
+                                popupResults[tabId] = response.face;
+                                popupResults.id = tabId
+                                window.popupResults = popupResults;
+                                // createPopUp
+                                callback(response);
+                            })
+                            .fail((jqXHR, textStatus, errorThrown) => {
+                                console.log(jqXHR);
+                            });
+                    } else {
+                        console.log('not detection.');
+                    }
+                });
+            })
     };
 
     img.src = str;
 }
 
-// browserAction
 chrome.browserAction.onClicked.addListener(() => {});
-
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function capture(coords, tabId)
