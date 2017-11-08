@@ -135,6 +135,4 @@ function gotMessage(request, sender, sendResponse)
     sendResponse({});
 }
 
-function sendMessage(msg)
-{
-}
+function sendMessage(msg) {}

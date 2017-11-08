@@ -48,8 +48,10 @@ function keyDown(e)
         e.preventDefault();
         e.stopPropagation();
 
-        endScreenshot(gCoords);
-
+        if (gCoords.w > 0 && gCoords.h > 0) {
+            endScreenshot(coords);
+        }
+        
         return false;
     }
 }
@@ -110,7 +112,9 @@ function mouseUp(e)
             y: startPos.y * WIDON_RATIO
         };
         gCoords = coords;
-        endScreenshot(coords);
+        if (gCoords.w > 0 && gCoords.h > 0) {
+            endScreenshot(coords);
+        }
     }, 50);
 
     return false;
