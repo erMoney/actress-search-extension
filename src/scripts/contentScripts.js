@@ -51,7 +51,7 @@ function keyDown(e)
         if (gCoords.w > 0 && gCoords.h > 0) {
             endScreenshot(coords);
         }
-        
+
         return false;
     }
 }

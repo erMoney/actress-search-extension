@@ -2,7 +2,8 @@ console.log('start backgroundScripts.js');
 import $ from 'jquery';
 import 'tracking/build/data/face';
 
-let popupResults = {}
+let popupResults = {};
+let isDetect = false;
 const apiEndpoint = 'https://actress-search.herokuapp.com/face:recognition';
 
 function cropData(str, coords, tabId, callback)
@@ -10,6 +11,8 @@ function cropData(str, coords, tabId, callback)
     let img = new Image();
 
     img.onload = () => {
+        if (isDetect) return;
+
         let canvasObj = document.createElement('canvas');
         canvasObj.width = coords.w;
         canvasObj.height = coords.h;
@@ -56,6 +59,7 @@ function cropData(str, coords, tabId, callback)
                         reject('not detection.');
                         return;
                     }
+                    isDetect = true;
                     resolve();
                 });
             });
@@ -109,8 +113,19 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function capture(coords, tabId)
 {
+    let count = 0;
+    const countUp = () => {
+        count++;
+    }
     chrome.tabs.captureVisibleTab(null, { format: 'png' }, (data) => {
-        cropData(data, coords, tabId, createPopUp);
+        const id = setInterval(() => {
+            console.log(count);
+            if(isDetect || count > 10) {　
+                clearInterval(id);
+            }
+            countUp();
+            cropData(data, coords, tabId, createPopUp);
+        }, 1000);
     });
 }
 
