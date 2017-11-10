@@ -95,19 +95,35 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function capture(coords, tabId)
 {
-    let count = 0;
-    const countUp = () => {
-        count++;
+    class CaptureFilter {
+        constructor(threshold) {
+            this.threshold = threshold || 10;
+            this.previousSrc = null;
+            this.unchangedCount = 0;
+        }
+        filter(currentSrc) {
+             if (!this.previousSrc || this.previousSrc !== currentSrc) {
+                this.previousSrc = currentSrc;
+                this.unchangedCount = 0;
+                return Promise.resolve(currentSrc);
+            } else if (this.unchangedCount < this.threshold) {
+                this.previousSrc = currentSrc;
+                this.unchangedCount += 1;
+                return Promise.resolve(currentSrc);
+            } else {
+                this.previousSrc = currentSrc;
+                this.unchangedCount += 1;
+                return Promise.reject(new Error('Capture is not changed.'));
+            }
+        }
     }
+
+    let captureFilter = new CaptureFilter();
+
     const run = () => {
         chrome.tabs.captureVisibleTab(null, { format: 'png' }, (data) => {
-            console.log(count);
-            if(count > 10) {　
-                return;
-            }
-            countUp();
-
             cropImage(data, coords)
+            .then(captureFilter.filter.bind(captureFilter))
             .then(faceDetect)
             .then(faceRecognize)
             .then(function (face) {
