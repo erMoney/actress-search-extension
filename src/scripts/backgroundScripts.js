@@ -99,8 +99,8 @@ function capture(coords, tabId)
     const countUp = () => {
         count++;
     }
-    chrome.tabs.captureVisibleTab(null, { format: 'png' }, (data) => {
-        const run = () => {
+    const run = () => {
+        chrome.tabs.captureVisibleTab(null, { format: 'png' }, (data) => {
             console.log(count);
             if(count > 10) {　
                 return;
@@ -120,9 +120,9 @@ function capture(coords, tabId)
                 console.log(err);
                 setTimeout(run, 1000);
             });
-        };
-        run();
-    });
+        });
+    };
+    run();
 }
 
 function createPopUp()
