@@ -56,7 +56,7 @@ function faceDetect(src)
                 console.log(event);
                 $(img).remove();
 
-                if(event.data.length == 0) {
+                if(event.data.length === 0) {
                     reject(new Error('Face is not detected.'));
                     return;
                 }
@@ -129,7 +129,7 @@ function capture(coords, tabId)
             .then(function (face) {
                 console.log("Success to detect actress", face);
                 popupResults[tabId] = face;
-                popupResults.id = tabId
+                popupResults.id = tabId;
                 window.popupResults = popupResults;
                 createPopUp();
             }).catch((err) => {
@@ -149,14 +149,14 @@ function createPopUp()
         type: 'popup',
         height : 650,
         width : 900
-    }
+    };
     chrome.windows.create(popup_options, (response) => {});
 }
 
 function gotMessage(request, sender, sendResponse)
 {
     console.log('gotMessage');
-    if (request.type == 'coords') {
+    if (request.type === 'coords') {
         capture(request.coords, sender.tab.id);
     }
     sendResponse({});
