@@ -2,7 +2,6 @@ console.log('start contentScripts.js');
 //
 // messages
 //
-
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(request, sender, sendResponse)
@@ -31,10 +30,9 @@ function sendMessage(msg)
     chrome.runtime.sendMessage(msg, (response) => {});
 };
 
-//
-// end messages
-//
-const WIDON_RATIO = window.devicePixelRatio
+
+
+const WIDWON_RATIO = window.devicePixelRatio
 let ghostElement,
     startPos,
     gCoords
@@ -106,10 +104,10 @@ function mouseUp(e)
 
     setTimeout(() => {
         let coords = {
-            w: diff.x * WIDON_RATIO,
-            h: diff.y * WIDON_RATIO,
-            x: startPos.x * WIDON_RATIO,
-            y: startPos.y * WIDON_RATIO
+            w: diff.x * WIDWON_RATIO,
+            h: diff.y * WIDWON_RATIO,
+            x: startPos.x * WIDWON_RATIO,
+            y: startPos.y * WIDWON_RATIO
         };
         gCoords = coords;
         if (gCoords.w > 0 && gCoords.h > 0) {

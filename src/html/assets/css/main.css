@@ -24,18 +24,24 @@
     width: 100%;
 }
 
-.card-square {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .actress-name {
     display: none;
 }
 
 .actress-video {
     display: none;
+    justify-content: center;
+}
+
+.mdl-grid {
+    max-width: 672px;
+}
+
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+    .card-square {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .card-square.mdl-card {
