@@ -32,7 +32,7 @@ function sendMessage(msg)
 
 
 
-const WIDWON_RATIO = window.devicePixelRatio
+const WINDOW_RATIO = window.devicePixelRatio
 let ghostElement,
     startPos,
     gCoords
@@ -104,10 +104,10 @@ function mouseUp(e)
 
     setTimeout(() => {
         let coords = {
-            w: diff.x * WIDWON_RATIO,
-            h: diff.y * WIDWON_RATIO,
-            x: startPos.x * WIDWON_RATIO,
-            y: startPos.y * WIDWON_RATIO
+            w: diff.x * WINDOW_RATIO,
+            h: diff.y * WINDOW_RATIO,
+            x: startPos.x * WINDOW_RATIO,
+            y: startPos.y * WINDOW_RATIO
         };
         gCoords = coords;
         if (gCoords.w > 0 && gCoords.h > 0) {
