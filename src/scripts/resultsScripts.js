@@ -5,7 +5,7 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
     let results = backgroundPage.popupResults;
     let id = results.id;
     let name = results[id].name;
-    if ( name !== undefined ) {
+    if (name !== undefined) {
         displayName(name);
         createAvgleLink(name);
     }
@@ -22,7 +22,7 @@ const createAvgleLink = (name) => {
     let query = name,
         page = 0,
         limit = '?limit=4'
-
+    
     $.getJSON(AVGLE_SEARCH_VIDEOS_API_URL + encodeURIComponent(query) + '/' + page + limit, (response) => {
         console.log(response);
         if (response.success) {
@@ -30,13 +30,13 @@ const createAvgleLink = (name) => {
             createLink(videos);
         }
     });
-
+    
     const createLink = (videos) => {
         let $videoElement = $('.actress-video')
         let count = 1;
         const MAX = videos.length;
         let temp = '<div class="mdl-grid">';
-        for(let video of videos) {
+        for (let video of videos) {
             temp += `
                 <div class="card-square mdl-cell--6-col mdl-cell mdl-card mdl-shadow--2dp">
                   <div class="mdl-card__title mdl-card--expand" style="background: url(${video.preview_url}) top right / 100% 100% no-repeat">
