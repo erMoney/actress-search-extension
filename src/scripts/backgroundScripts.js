@@ -124,8 +124,6 @@ function capture(coords, tabId) {
             
             if (currentTab.id !== tabId) {
                 console.log('The tab is not for capturing.');
-                
-                // MEMO: 取り敢えず別タブになったらCaptureをとめる
                 return;
             }
             
