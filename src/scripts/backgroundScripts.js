@@ -90,6 +90,7 @@ chrome.browserAction.onClicked.addListener(() => {
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function capture(coords, tabId) {
+
     class CaptureFilter {
         constructor(threshold) {
             this.threshold = threshold || 10;
@@ -114,10 +115,42 @@ function capture(coords, tabId) {
         }
     }
     
+    class LoadingDialog {
+        constructor() {
+            this.angle = 0;
+            this.intervalId = null;
+        }
+        
+        show() {
+            if (!!this.intervalId) {
+                // already show
+                return;
+            }
+            
+            this.intervalId = setInterval(() => {
+                let nextAngle = (this.angle + 90) % 360;
+                chrome.browserAction.setIcon({ path: `icons/load-${nextAngle}.png` });
+                this.angle = nextAngle;
+            }, 1000);
+        }
+        
+        dismiss() {
+            if (!!this.intervalId) {
+                clearInterval(this.intervalId);
+            }
+            chrome.browserAction.setIcon({ path: `icons/16.png` });
+            this.intervalId = null;
+        }
+    }
+    
     let captureFilter = new CaptureFilter();
     let count = 0;
     
+    let loadingDialog = new LoadingDialog();
+    
     const run = () => {
+        loadingDialog.show();
+        
         chrome.tabs.getSelected(null, function(currentTab) {
             console.log('Current Tab Id:', currentTab.id);
             console.log('Tab Id For Capturing', tabId);
@@ -134,6 +167,9 @@ function capture(coords, tabId) {
                     .then(faceRecognize)
                     .then(function (face) {
                         console.log("Success to detect actress", face);
+    
+                        loadingDialog.dismiss();
+                        
                         popupResults[tabId] = face;
                         popupResults.id = tabId;
                         window.popupResults = popupResults;
@@ -145,6 +181,8 @@ function capture(coords, tabId) {
                         count++;
                         setTimeout(run, 1000);
                     } else {
+    
+                        loadingDialog.dismiss();
                         console.log('stop.....');
                     }
                 });
