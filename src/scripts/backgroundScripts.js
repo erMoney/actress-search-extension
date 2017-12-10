@@ -115,12 +115,13 @@ function capture(coords, tabId) {
     }
     
     let captureFilter = new CaptureFilter();
+    let count = 0;
     
     const run = () => {
         chrome.tabs.captureVisibleTab(null, {format: 'png'}, (data) => {
             cropImage(data, coords)
                 .then(captureFilter.filter.bind(captureFilter))
-                .then(faceDetect)
+                // .then(faceDetect)
                 .then(faceRecognize)
                 .then(function (face) {
                     console.log("Success to detect actress", face);
@@ -129,9 +130,15 @@ function capture(coords, tabId) {
                     window.popupResults = popupResults;
                     createPopUp();
                 }).catch((err) => {
-                console.log(err);
-                setTimeout(run, 1000);
-            });
+                    console.log(err);
+                    
+                    if (count < 10) {
+                        count++;
+                        setTimeout(run, 1000);
+                    } else {
+                        console.log('stopped capture.....');
+                    }
+                });
         });
     };
     run();
