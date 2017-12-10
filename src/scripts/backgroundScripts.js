@@ -129,7 +129,7 @@ function capture(coords, tabId) {
             
             this.intervalId = setInterval(() => {
                 let nextAngle = (this.angle + 90) % 360;
-                chrome.browserAction.setIcon({ path: `icons/load-${nextAngle}.png` });
+                chrome.browserAction.setIcon({ path: `/icons/load-${nextAngle}.png` });
                 this.angle = nextAngle;
             }, 1000);
         }
@@ -138,7 +138,7 @@ function capture(coords, tabId) {
             if (!!this.intervalId) {
                 clearInterval(this.intervalId);
             }
-            chrome.browserAction.setIcon({ path: `icons/16.png` });
+            chrome.browserAction.setIcon({ path: `/icons/16.png` });
             this.intervalId = null;
         }
     }

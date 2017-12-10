@@ -69,6 +69,10 @@ module.exports = {
                     from: path.join(__dirname, 'src', 'icons', '128.png'),
                     to: path.join(__dirname, 'dist', 'icons', '128.png'),
                 },
+                {
+                    from: path.join(__dirname, 'src', 'icons', 'how_to_capture.gif'),
+                    to: path.join(__dirname, 'dist', 'icons', 'how_to_capture.gif'),
+                },
             ]
         ),
         new webpack.ProvidePlugin({
