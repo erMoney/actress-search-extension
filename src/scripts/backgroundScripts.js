@@ -118,27 +118,39 @@ function capture(coords, tabId) {
     let count = 0;
     
     const run = () => {
-        chrome.tabs.captureVisibleTab(null, {format: 'png'}, (data) => {
-            cropImage(data, coords)
-                .then(captureFilter.filter.bind(captureFilter))
-                // .then(faceDetect)
-                .then(faceRecognize)
-                .then(function (face) {
-                    console.log("Success to detect actress", face);
-                    popupResults[tabId] = face;
-                    popupResults.id = tabId;
-                    window.popupResults = popupResults;
-                    createPopUp();
-                }).catch((err) => {
+        chrome.tabs.getSelected(null, function(currentTab) {
+            console.log('Current Tab Id:', currentTab.id);
+            console.log('Tab Id For Capturing', tabId);
+            
+            if (currentTab.id !== tabId) {
+                console.log('The tab is not for capturing.');
+                
+                // MEMO: 取り敢えず別タブになったらCaptureをとめる
+                return;
+            }
+            
+            chrome.tabs.captureVisibleTab(null, {format: 'png'}, (data) => {
+                cropImage(data, coords)
+                    .then(captureFilter.filter.bind(captureFilter))
+                    // .then(faceDetect)
+                    .then(faceRecognize)
+                    .then(function (face) {
+                        console.log("Success to detect actress", face);
+                        popupResults[tabId] = face;
+                        popupResults.id = tabId;
+                        window.popupResults = popupResults;
+                        createPopUp();
+                    }).catch((err) => {
                     console.log(err);
-                    
+            
                     if (count < 10) {
                         count++;
                         setTimeout(run, 1000);
                     } else {
-                        console.log('stopped capture.....');
+                        console.log('stop.....');
                     }
                 });
+            });
         });
     };
     run();
