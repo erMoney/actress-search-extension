@@ -1,4 +1,5 @@
 console.log('start contentScripts.js');
+import { ACTIONS } from 'constants'
 //
 // messages
 //
@@ -6,7 +7,7 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(request, sender, sendResponse) {
     console.log('gotMessage');
-    if (request.type == 'start-screenshots') {
+    if (request.type == ACTIONS.START_SCREENSHOT) {
         startScreenshot();
     }
     sendResponse({});
