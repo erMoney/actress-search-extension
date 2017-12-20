@@ -53,3 +53,7 @@
 .card-square > .mdl-card__title {
     color: #fff;
 }
+
+.capture-guide {
+    text-align: center;
+}
