@@ -1,4 +1,4 @@
-console.log('start popupScripts.js');
+console.log('start popup.js');
 import 'babel-polyfill';
 import 'chrome-extension-async';
 import $ from 'jquery';

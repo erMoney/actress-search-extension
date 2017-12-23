@@ -1,4 +1,4 @@
-console.log('start contentScripts.js');
+console.log('start contents.js');
 import 'babel-polyfill';
 import 'chrome-extension-async';
 import $ from 'jquery';

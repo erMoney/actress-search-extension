@@ -5,13 +5,13 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
     entry: {
-        contentScripts: path.join(__dirname, 'src', 'scripts', 'contentScripts.js'),
-        backgroundScripts: path.join(__dirname, 'src', 'scripts', 'backgroundScripts.js'),
-        popupScripts: path.join(__dirname, 'src', 'scripts', 'popupScripts.js'),
-        resultsScripts: path.join(__dirname, 'src', 'scripts', 'resultsScripts.js'),
+        contents: path.join(__dirname, 'src/scripts/contents.js'),
+        background: path.join(__dirname, 'src/scripts/background.js'),
+        popup: path.join(__dirname, 'src/scripts/popup.js'),
+        results: path.join(__dirname, 'src/scripts/results.js'),
     },
     output: {
-        path: path.join(__dirname, "dist"),
+        path: path.join(__dirname, 'dist'),
         filename: 'scripts/[name].js',
     },
     target: 'web',
@@ -38,41 +38,20 @@ module.exports = {
         new CopyWebpackPlugin(
             [
                 {
-                    from: path.join(__dirname, 'src', 'manifest.json'),
-                    to: path.join(__dirname, 'dist'),
+                    from: 'src/manifest.json'
                 },
                 {
-                    from: path.join(__dirname, 'src', 'scripts', 'lib', 'hot-reload.js'),
-                    to: path.join(__dirname, 'dist', 'scripts', 'lib'),
+                    from: 'src/scripts/lib/hot-reload.js',
+                    to: 'scripts/lib/hot-reload.js'
                 },
                 {
-                    from: path.join(__dirname, 'src', 'html', 'popup.html'),
-                    to: path.join(__dirname, 'dist', 'html'),
+                    from: 'src/html',
+                    to: 'html'
                 },
                 {
-                    from: path.join(__dirname, 'src', 'html', 'results.html'),
-                    to: path.join(__dirname, 'dist', 'html'),
-                },
-                {
-                    from: path.join(__dirname, 'src', 'html', 'assets', 'css', 'main.css'),
-                    to: path.join(__dirname, 'dist', 'html', 'assets', 'css'),
-                },
-                {
-                    from: path.join(__dirname, 'src', 'icons', '16.png'),
-                    to: path.join(__dirname, 'dist', 'icons', '16.png'),
-                },
-                {
-                    from: path.join(__dirname, 'src', 'icons', '48.png'),
-                    to: path.join(__dirname, 'dist', 'icons', '48.png'),
-                },
-                {
-                    from: path.join(__dirname, 'src', 'icons', '128.png'),
-                    to: path.join(__dirname, 'dist', 'icons', '128.png'),
-                },
-                {
-                    from: path.join(__dirname, 'src', 'icons', 'how_to_capture.gif'),
-                    to: path.join(__dirname, 'dist', 'icons', 'how_to_capture.gif'),
-                },
+                    from: 'src/icons',
+                    to: 'icons'
+                }
             ]
         ),
         new webpack.ProvidePlugin({

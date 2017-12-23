@@ -1,4 +1,4 @@
-console.log('start backgroundScripts.js');
+console.log('start background.js');
 import $ from 'jquery';
 import 'tracking/build/data/face';
 

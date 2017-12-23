@@ -1,4 +1,4 @@
-console.log('start resultsScripts.js');
+console.log('start results.js');
 import $ from 'jquery';
 
 chrome.runtime.getBackgroundPage((backgroundPage) => {
