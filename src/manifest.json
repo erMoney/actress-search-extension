@@ -28,7 +28,7 @@
         "default_icon": {
             "16": "icons/16.png"
         },
-        "default_title": "erMoney",
+        "default_title": "actress search",
         "default_popup": "html/popup.html"
     },
     "permissions": [

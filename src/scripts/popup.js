@@ -1,11 +1,14 @@
-console.log('start popup.js');
 import 'babel-polyfill';
 import 'chrome-extension-async';
 import $ from 'jquery';
 import { ACTIONS } from './constants';
 
-$('#start-screenshots').on('click', async () => {
-    let tab = await chrome.tabs.query({active: true});
-    await chrome.tabs.sendMessage(tab[0].id, {type: ACTIONS.START_SCREENSHOT});
-    window.close();
+$(async () => {
+    await chrome.runtime.sendMessage({type: ACTIONS.STOP_PROCESS});
+    
+    $('#start_screenshots').on('click', async () => {
+        await chrome.runtime.sendMessage({type: ACTIONS.START_SCREENSHOT});
+        window.close();
+    });
 });
+
