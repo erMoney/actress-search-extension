@@ -152,30 +152,29 @@ import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
     const doRecognizeProcess = async (tab, coords) => {
         const processId = uuidv4();
         currentProcessId = processId;
+        loadingDialog.show();
         
         // MEMO: 10回まわしてダメなら、おしまい
         for (let i = 0; i < 10 && (currentProcessId === processId); i++) {
-            loadingDialog.show();
             try {
                 let screenShot = await getScreenShot(tab, coords);
                 consoleImage(screenShot);
                 let results = await faceRecognize(screenShot);
-                
+    
+                // ProcessIdが変わっていたら処理しない
                 if (currentProcessId === processId) {
                     await showResultPopup(results);
                 }
                 break;
             } catch (err) {
                 console.error(err);
-            } finally {
-                if (currentProcessId === processId) {
-                    loadingDialog.dismiss();
-                }
             }
         }
         
+        // ProcessIdが変わっていたら処理しない
         if (currentProcessId === processId) {
             currentProcessId = null;
+            loadingDialog.dismiss();
         }
     };
     
