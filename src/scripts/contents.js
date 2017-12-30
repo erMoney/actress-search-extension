@@ -99,6 +99,7 @@ $(async () => {
     
     const onMessage = (request, sender, sendResponse) => {
         console.log('Action:', request.type);
+        // Next TickでRecieveできないので、先に処理を受け取ったことを返す
         sendResponse();
         switch (request.type) {
             case ACTIONS.GET_COORDS:

@@ -3,7 +3,8 @@ import 'chrome-extension-async';
 import $ from 'jquery';
 import uuidv4 from 'uuid/v4';
 import 'tracking/build/data/face';
-import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
+import { consoleImage, timeout, newImage } from './utils';
+import { API_ENDPOINT, ACTIONS } from './constants';
 
 (() => {
     'use strict';
@@ -39,20 +40,6 @@ import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
     }
     
     const loadingDialog = new LoadingDialog();
-    
-    const consoleImage = (src) => {
-        console.log('%c       ', 'font-size: 100px; background: url(' + src + ') no-repeat; background-size:contain;');
-    };
-    
-    const newImage = (src) => {
-        return new Promise((resolve) => {
-            let img = new Image();
-            img.onload = () => {
-                resolve(img);
-            };
-            img.src = src;
-        });
-    };
     
     const cropImage = async (src, coords) =>{
         let img = await newImage(src);
@@ -95,7 +82,7 @@ import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
     
     const faceRecognize = async (src) => {
         return new Promise((resolve, reject) => {
-            let body = {
+            const body = {
                 'image': src.replace(/^.*,/, '')
             };
             $.ajax({
@@ -117,39 +104,49 @@ import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
     };
     
     const getCurrentTab = async () => {
-        let tabs = await chrome.tabs.query({active: true});
+        const tabs = await chrome.tabs.query({active: true});
         return tabs[0];
     };
     
     const getCoords = async () => {
-        let currentTab = await getCurrentTab();
+        const currentTab = await getCurrentTab();
+        console.log('Current Tab Id:', currentTab.id);
         await chrome.tabs.sendMessage(currentTab.id, {type: ACTIONS.GET_COORDS});
     };
     
     const getScreenShot = async (tab, coords) => {
-        let windowId = tab.windowId;
-        let data = await chrome.tabs.captureVisibleTab(windowId, {format: 'png'});
-        return cropImage(data, coords);
+        const windowId = tab.windowId;
+        return new Promise((resolve, reject) => {
+            chrome.tabs.getSelected(windowId, async (selectedTab) => {
+                if (selectedTab.id !== tab.id) {
+                    reject(new Error('Selected Tab is changed'));
+                    return;
+                }
+                let data = await chrome.tabs.captureVisibleTab(windowId, {format: 'png'});
+                resolve(await cropImage(data, coords));
+            });
+        });
     };
     
     const showResultPopup = async (results) => {
-        console.log(results);
-        let window = await chrome.windows.create({
+        const window = await chrome.windows.create({
             url: 'html/results.html',
             focused: false,
             type: 'popup',
             height: 650,
             width: 900
         });
-        let tab = window.tabs[0];
+        const tab = window.tabs[0];
         chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+            // window作成直後は、onload状態になくすぐにメッセージを受け取れない
+            // そのため、ここでstatusがcompleteになった時にメッセージを送信するようにしている
             if (tab.id === tabId && changeInfo.status === "complete") {
                 await chrome.tabs.sendMessage(tab.id, {type: ACTIONS.SHOW_RESULT, results: results});
             }
         });
     };
     
-    const doRecognizeProcess = async (tab, coords) => {
+    const startProcess = async (tab, coords) => {
         const processId = uuidv4();
         currentProcessId = processId;
         loadingDialog.show();
@@ -168,32 +165,36 @@ import { API_ENDPOINT, ACTIONS, STATUS } from './constants';
                 break;
             } catch (err) {
                 console.error(err);
+                await timeout(5000);
             }
         }
         
         // ProcessIdが変わっていたら処理しない
         if (currentProcessId === processId) {
-            currentProcessId = null;
-            loadingDialog.dismiss();
+            stopProcess();
         }
+    };
+    
+    const stopProcess = () => {
+        currentProcessId = null;
+        loadingDialog.dismiss();
     };
     
     const onMessage = async (request, sender, sendResponse) => {
         console.log('Action:', request.type);
+        // Next TickでRecieveできないので、先に処理を受け取ったことを返す
         sendResponse();
         switch (request.type) {
             case ACTIONS.STOP_PROCESS:
-                currentProcessId = null;
-                loadingDialog.dismiss();
+                stopProcess();
                 break;
             case ACTIONS.START_SCREENSHOT:
-                sendResponse();
                 await getCoords();
                 break;
             case ACTIONS.RECOGNIZE_FACE:
                 let tab = sender.tab;
                 let coords = request.coords;
-                await doRecognizeProcess(tab, coords);
+                await startProcess(tab, coords);
                 break;
         }
     };

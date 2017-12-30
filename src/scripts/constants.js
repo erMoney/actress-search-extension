@@ -2,11 +2,6 @@ const API_ENDPOINT = 'https://actress-search.herokuapp.com/face:recognition';
 
 const AVGLE_SEARCH_VIDEOS_API_URL = 'https://api.avgle.com/v1/search/';
 
-const STATUS = {
-    STOPPED: "STOPPED",
-    PROCESSING: "PROCESSING",
-};
-
 const ACTIONS = {
     STOP_PROCESS: "STOP_PROCESS",
     START_SCREENSHOT: "START_SCREENSHOT",
@@ -19,5 +14,4 @@ module.exports = {
     API_ENDPOINT,
     AVGLE_SEARCH_VIDEOS_API_URL,
     ACTIONS,
-    STATUS,
 };

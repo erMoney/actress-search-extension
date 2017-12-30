@@ -55,11 +55,12 @@ $(async () => {
     
     const onMessage = (request, sender, sendResponse) => {
         console.log('Action:', request.type);
+        // Next TickでRecieveできないので、先に処理を受け取ったことを返す
         sendResponse();
         switch (request.type) {
             case ACTIONS.SHOW_RESULT:
-                let results = request.results;
-                let name = results.name;
+                const results = request.results;
+                const name = results.name;
                 if (typeof name !== undefined) {
                     displayName(name);
                     createAvgleLink(name);
