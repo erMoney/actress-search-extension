@@ -1,3 +1,4 @@
+app/*
 dist/*
 package-lock.json
 

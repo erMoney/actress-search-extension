@@ -11,7 +11,7 @@ module.exports = {
         results: path.join(__dirname, 'src/scripts/results.js'),
     },
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'app/dist'),
         filename: 'scripts/[name].js',
     },
     target: 'web',
@@ -39,6 +39,10 @@ module.exports = {
             [
                 {
                     from: 'src/manifest.json'
+                },
+                {
+                    from: 'src/readme.txt',
+                    to: path.join(__dirname, 'app')
                 },
                 {
                     from: 'src/scripts/lib/hot-reload.js',
